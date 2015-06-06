@@ -1,0 +1,9 @@
+Package: Gmisc
+Type: Package
+Title: An assortment of functions
+Version: 1.0
+Date: 2015-06-05
+Author: Giuseppe A. Paleologo
+Maintainer: Giuseppe A. Paleologo <paleologo@gmail.com>
+Description: Various functions
+License: What license is it under?
