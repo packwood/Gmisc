@@ -9,7 +9,6 @@ withNames <- function(x){
   x
 }
 
-
 # `setrownames<-` <- function (x, ...) {
 #   UseMethod("rownames<-", x)
 # }
@@ -626,16 +625,10 @@ MVTSPlot <- function(X, obs = c('rows','cols'), lowcol = 'red', highcol ='green'
 #' procList(X, FUN, na.rm=F)
 #' @export
 #' 
-#' 
 lapplyseq <- function(X, FUN, label=c('first','last'),...){
-#   label <- match.arg(label)
-#   stopifnot('list' %in% class(X))
-#   Y <- lapply( 2:length(X), function(i) FUN(X[[i-1]], X[[i]], ...) )
-#   if (!is.null(names(X))) {
-#     if (label == 'last'){
-#       names(Y) <- names(X)[-1]
-#     } else {
-#       names(Y) <- names(X)[-length(X)]
-#     }
-#   Y
+  label <- match.arg(label)
+  stopifnot('list' %in% class(X))
+  Y <- lapply( 2:length(X), function(i) FUN(X[[i-1]], X[[i]], ...) )
+  names(Y) <- ifelse(label =='last', names(X)[-1], names(X)[-length(X)])
+  Y
 }
