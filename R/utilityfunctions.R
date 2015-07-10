@@ -1,3 +1,18 @@
+#' a simple decorator to benchmark execution times
+#' 
+#' @param f function
+#' @return a function. Identical to f, but prints execution time 
+#' @export
+timeit <- function(f){
+  a <- deparse(substitute(f))
+  function(...) {
+    cat("calling function:", a, '\n')
+    a <- system.time({x <- f(...)})[['user.self']]
+    cat('time elapsed:', a, '\n')
+    x
+  }
+}
+
 #' creates names for a vector equal to its elements
 #'
 #' @param x vector
@@ -631,4 +646,22 @@ lapplyseq <- function(X, FUN, label=c('first','last'),...){
   Y <- lapply( 2:length(X), function(i) FUN(X[[i-1]], X[[i]], ...) )
   names(Y) <- ifelse(label =='last', names(X)[-1], names(X)[-length(X)])
   Y
+}
+
+#' This function prints summary statistics of a ragged array
+#' i.e. a list f vectors of unequal length. Mostly used with
+#' lists of portfolios
+
+#' @param X list, a list comprised of vectors coercible to numeric
+#' @return the function has only side effects
+#' @export
+summary_raggedarray <- function(X){
+  X <- l2m(X)
+  summary_data <- data.frame(n_elements = nrow(X),
+                             mean_sum = mean(apply(X, 1, sum, na.rm=TRUE)),
+                             mean_L1 = mean(apply(X, 1, l(x ~ sum(abs(x), na.rm=TRUE)))),
+                             mean_L2 = mean(apply(X, 1, l(x ~ sum(x^2, na.rm=TRUE))))) %>%
+    as.matrix %>% t %>% (l(x ~ {colnames(x) <- 'value'; x}))
+  cat("\n---summary data----\n")
+  print(summary_data)
 }
